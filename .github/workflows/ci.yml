@@ -8,6 +8,12 @@ on:
   pull_request:
     branches: main
   workflow_dispatch:
+    inputs:
+      debug_enabled:
+        type: boolean
+        description: 'Run the build with tmate debugging enabled'
+        required: false
+        default: false
 
 jobs:
   code_quality:
@@ -35,8 +41,8 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.10']
-        ckan-version: ["2.10", "2.11"]
-    name: Python ${{ matrix.python-version }} extension test
+        ckan-version: ["2.10", "2.11.0"]
+    name: Python ${{ matrix.python-version }} ckan ${{ matrix.ckan-version }} test
 
     services:
       postgresql:
@@ -88,6 +94,16 @@ jobs:
         run: |
           export CKANVERSION=${{matrix.ckan-version}}
           bash bin/setup-ckan.bash
+          echo ${{matrix.ckan-version}}
+          echo ${{github.event_name}}
+          echo ${{inputs.debug_enabled}}
+          echo ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+
+      - name: Run tmate
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        with:
+         limit-access-to-actor: true
 
       - name: Test with pytest
         run: |
