@@ -20,6 +20,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 import os
 import pytest
 
+import ckan
 from ckan.plugins import toolkit
 from ckan.plugins.toolkit import url_for
 
@@ -125,7 +126,9 @@ class TestBlueprint(object):
         # Starting 2.10, CKAN's SessionMiddleware will append a
         # new Set-cookie header on every first response from the server.
         # This includes test requests.
-        assert len(cookie_headers) == 2
+        current_version = ckan.__version__
+        count_cookie = 2 if current_version.startswith("2.10") else 1
+        assert len(cookie_headers) == count_cookie
 
         first_cookie = cookie_headers[0]
 
