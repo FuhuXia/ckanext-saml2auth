@@ -17,13 +17,13 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 import logging
 
-from saml2.ident import code, decode
+from saml2.ident import decode
 
 log = logging.getLogger(__name__)
 
 
 def set_subject_id(session, subject_id):
-    session['_saml2_subject_id'] = code(subject_id)
+    session['_saml2_subject_id'] = subject_id
 
 
 def get_subject_id(session):
