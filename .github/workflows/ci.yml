@@ -101,7 +101,7 @@ jobs:
 
       - name: Run tmate
         uses: mxschmitt/action-tmate@v3
-        # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
         with:
          limit-access-to-actor: true
 
