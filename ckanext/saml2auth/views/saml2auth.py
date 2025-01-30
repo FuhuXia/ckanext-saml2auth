@@ -23,6 +23,8 @@ import copy
 from flask import Blueprint, session
 from saml2 import entity
 from saml2.authn_context import requested_authn_context
+from saml2.ident import code
+from saml2.saml import NameID
 
 import ckan.plugins.toolkit as toolkit
 import ckan.model as model
@@ -232,6 +234,10 @@ def acs():
     auth_response.get_identity()
     user_info = auth_response.get_subject()
     session_info = auth_response.session_info()
+    # code saml2.saml.NameID to string so that it is serializable
+    name_id = session_info.get('name_id')
+    if isinstance(name_id, NameID):
+        session_info['name_id'] = code(name_id)
 
     # SAML username - unique
     saml_id = user_info.text
