@@ -20,6 +20,7 @@ import logging
 
 from saml2.client_base import LogoutError
 from saml2 import entity
+from saml2.ident import decode
 
 from flask import session, redirect, make_response
 
@@ -123,7 +124,13 @@ def _perform_slo():
     client = h.saml_client(
         sp_config()
     )
-    saml_session_info = get_saml_session_info(session)
+    session_info = get_saml_session_info(session)
+
+    # decode it back to saml2.saml.NameID for client to use
+    name_id = session_info.get('name_id')
+    if isinstance(name_id, str):
+        session_info['name_id'] = decode(name_id)
+
     subject_id = get_subject_id(session)
 
     if subject_id is None:
@@ -132,7 +139,9 @@ def _perform_slo():
         return
 
     try:
-        client.users.add_information_about_person(saml_session_info)
+        client.users.add_information_about_person(session_info)
+        # we still need serializable name_id
+        session_info['name_id'] = name_id
         result = client.global_logout(name_id=subject_id)
     except (LogoutError, UnsupportedBinding) as e:
         log.exception(
