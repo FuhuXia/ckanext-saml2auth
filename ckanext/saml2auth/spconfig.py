@@ -75,6 +75,8 @@ def get_config():
                 },
                 u'allow_unsolicited': True,
                 u'authn_requests_signed': True,
+                u'signing_algorithm': SIG_RSA_SHA256,
+                u'digest_algorithm': DIGEST_SHA256,
                 u'name_id_format': name_id_format,
                 u'want_response_signed': response_signed,
                 u'want_assertions_signed': assertion_signed,
@@ -86,8 +88,6 @@ def get_config():
         u'metadata': {},
         u'debug': 1 if debug else 0,
         u'name_form': NAME_FORMAT_URI,
-        u'sign_alg': SIG_RSA_SHA256,
-        u'digest_alg': DIGEST_SHA256,
         }
 
     if name_id_policy_format:

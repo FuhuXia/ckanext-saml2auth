@@ -56,9 +56,9 @@ def test_read_metadata_remote_url():
 def test_signed_settings():
 
     cfg = get_config()
-    assert cfg[u'sign_alg'] == SIG_RSA_SHA256
-    assert cfg[u'digest_alg'] == DIGEST_SHA256
     assert cfg[u'service'][u'sp'][u'authn_requests_signed']
+    assert cfg[u'service'][u'sp'][u'signing_algorithm'] == SIG_RSA_SHA256
+    assert cfg[u'service'][u'sp'][u'digest_algorithm'] == DIGEST_SHA256
     assert not cfg[u'service'][u'sp'][u'want_response_signed']
     assert cfg[u'service'][u'sp'][u'want_assertions_signed']
     assert cfg[u'service'][u'sp'][u'want_assertions_or_response_signed']
