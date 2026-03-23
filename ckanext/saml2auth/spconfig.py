@@ -19,6 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from saml2.saml import NAME_FORMAT_URI
 from saml2 import entity
+from saml2.xmldsig import SIG_RSA_SHA256, DIGEST_SHA256
 
 from ckan.common import config as ckan_config
 from ckan.common import asbool, aslist
@@ -84,7 +85,9 @@ def get_config():
         u'logout_expected_binding': logout_expected_binding,
         u'metadata': {},
         u'debug': 1 if debug else 0,
-        u'name_form': NAME_FORMAT_URI
+        u'name_form': NAME_FORMAT_URI,
+        u'sign_alg': SIG_RSA_SHA256,
+        u'digest_alg': DIGEST_SHA256,
         }
 
     if name_id_policy_format:
