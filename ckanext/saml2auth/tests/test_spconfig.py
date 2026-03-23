@@ -55,6 +55,7 @@ def test_read_metadata_remote_url():
 def test_signed_settings():
 
     cfg = get_config()
+    assert cfg[u'service'][u'sp'][u'authn_requests_signed']
     assert not cfg[u'service'][u'sp'][u'want_response_signed']
     assert cfg[u'service'][u'sp'][u'want_assertions_signed']
     assert cfg[u'service'][u'sp'][u'want_assertions_or_response_signed']
