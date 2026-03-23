@@ -18,7 +18,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
 
 import pytest
-from saml2.xmldsig import SIG_RSA_SHA256, DIGEST_SHA256
 
 from ckanext.saml2auth.spconfig import get_config
 from ckanext.saml2auth.views.saml2auth import _get_requested_authn_contexts
@@ -57,8 +56,6 @@ def test_signed_settings():
 
     cfg = get_config()
     assert cfg[u'service'][u'sp'][u'authn_requests_signed']
-    assert cfg[u'service'][u'sp'][u'signing_algorithm'] == SIG_RSA_SHA256
-    assert cfg[u'service'][u'sp'][u'digest_algorithm'] == DIGEST_SHA256
     assert not cfg[u'service'][u'sp'][u'want_response_signed']
     assert cfg[u'service'][u'sp'][u'want_assertions_signed']
     assert cfg[u'service'][u'sp'][u'want_assertions_or_response_signed']

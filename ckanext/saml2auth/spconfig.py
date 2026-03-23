@@ -19,7 +19,6 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 from saml2.saml import NAME_FORMAT_URI
 from saml2 import entity
-from saml2.xmldsig import SIG_RSA_SHA256, DIGEST_SHA256
 
 from ckan.common import config as ckan_config
 from ckan.common import asbool, aslist
@@ -75,8 +74,6 @@ def get_config():
                 },
                 u'allow_unsolicited': True,
                 u'authn_requests_signed': True,
-                u'signing_algorithm': SIG_RSA_SHA256,
-                u'digest_algorithm': DIGEST_SHA256,
                 u'name_id_format': name_id_format,
                 u'want_response_signed': response_signed,
                 u'want_assertions_signed': assertion_signed,
