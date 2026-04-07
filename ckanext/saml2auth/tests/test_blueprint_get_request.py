@@ -30,6 +30,8 @@ except ImportError:
 from ckan import model
 from ckan.plugins import toolkit
 
+from ckanext.saml2auth.client import strip_embedded_encryption_certificates
+
 from saml2.xmldsig import SIG_RSA_SHA256
 from saml2.xmldsig import DIGEST_SHA256
 from saml2.saml import NAMEID_FORMAT_ENTITY
@@ -66,6 +68,33 @@ def _prepare_unsigned_response():
     encoded_response = _b4_encode_string(final_response)
 
     return encoded_response
+
+
+def test_strip_embedded_encryption_certificates():
+    xml = '''
+    <samlp:Response xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+                    xmlns:xenc="http://www.w3.org/2001/04/xmlenc#"
+                    xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+      <samlp:EncryptedAssertion>
+        <xenc:EncryptedData>
+          <ds:KeyInfo>
+            <xenc:EncryptedKey>
+              <ds:KeyInfo>
+                <ds:X509Data>
+                  <ds:X509Certificate>abc</ds:X509Certificate>
+                </ds:X509Data>
+              </ds:KeyInfo>
+            </xenc:EncryptedKey>
+          </ds:KeyInfo>
+        </xenc:EncryptedData>
+      </samlp:EncryptedAssertion>
+    </samlp:Response>
+    '''
+
+    sanitized = strip_embedded_encryption_certificates(xml)
+
+    assert 'X509Data' not in sanitized
+    assert 'EncryptedKey' in sanitized
 
 
 @pytest.mark.usefixtures(u'clean_db', u'clean_index')
