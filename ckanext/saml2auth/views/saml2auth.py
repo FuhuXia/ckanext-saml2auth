@@ -211,7 +211,7 @@ def process_new_user(email, saml_id, full_name, saml_attributes):
     return user_dict[u'name']
 
 
-def acs():
+def acs():  # noqa: C901
     u'''The location where the SAML assertion is sent with a HTTP POST.
     This is often referred to as the SAML Assertion Consumer Service (ACS) URL.
     '''
