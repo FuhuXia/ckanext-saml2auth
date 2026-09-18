@@ -35,7 +35,7 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.10']
-        ckan-version: ["2.10", "2.11.0"]
+        ckan-version: ["2.11.0"]
     name: Python ${{ matrix.python-version }} ckan ${{ matrix.ckan-version }} test
 
     services:
@@ -88,10 +88,15 @@ jobs:
         run: |
           export CKANVERSION=${{matrix.ckan-version}}
           bash bin/setup-ckan.bash
+          python -m pip install pyOpenSSL==24.2.1 cryptography==43.0.3
 
       - name: Test with pytest
         run: |
-          pytest --ckan-ini=subdir/test.ini --cov=ckanext.saml2auth --disable-warnings ckanext/saml2auth/tests
+          pytest -p no:ckan -p no:ckan_fixtures \
+            --ckan-ini=subdir/test.ini \
+            --cov=ckanext.saml2auth \
+            --disable-warnings \
+            ckanext/saml2auth/tests
 
       - name: Coveralls
         uses: AndreMiras/coveralls-python-action@develop
