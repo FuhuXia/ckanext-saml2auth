@@ -330,6 +330,10 @@ def saml2login():
      configured identity provider for authentication
     '''
     client = h.saml_client(sp_config())
+    sign_request = bool(
+        config.get('ckanext.saml2auth.key_file_path')
+        and config.get('ckanext.saml2auth.cert_file_path')
+    )
     requested_authn_contexts = _get_requested_authn_contexts()
     relay_state = toolkit.request.args.get('came_from', '')
 
@@ -348,13 +352,13 @@ def saml2login():
         reqid, info = client.prepare_for_authenticate(
             requested_authn_context=final_context,
             relay_state=relay_state,
-            sign=True,
+            sign=sign_request,
             sigalg=SIG_RSA_SHA256
         )
     else:
         reqid, info = client.prepare_for_authenticate(
             relay_state=relay_state,
-            sign=True,
+            sign=sign_request,
             sigalg=SIG_RSA_SHA256
         )
 
